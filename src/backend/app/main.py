@@ -12,6 +12,7 @@ from app.auth.deps import get_current_user, TokenData
 from app.api.upload import router as upload_router
 from app.api.intelligence import router as intelligence_router
 from app.api.chat import router as chat_router
+from app.api.network import router as network_router
 
 app = FastAPI(title="Criminal Network Intelligence API")
 
@@ -31,6 +32,7 @@ app.include_router(auth_router, tags=["auth"])
 app.include_router(upload_router, tags=["upload"])
 app.include_router(intelligence_router, tags=["intelligence"])
 app.include_router(chat_router, tags=["chat"])
+app.include_router(network_router, tags=["network"])
 
 @app.get("/health")
 def health_check():

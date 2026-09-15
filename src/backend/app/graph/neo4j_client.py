@@ -436,3 +436,110 @@ class Neo4jClient:
                 
         return findings
 
+    def _build_networkx_graph(self):
+        import networkx as nx
+        G = nx.Graph()
+        graph_data = self.get_graph_data()
+        
+        for node in graph_data["nodes"]:
+            if node["data"].get("label") == "CASE":
+                continue
+            G.add_node(node["data"]["id"], **node["data"])
+            
+        for edge in graph_data["edges"]:
+            if G.has_node(edge["data"]["source"]) and G.has_node(edge["data"]["target"]):
+                G.add_edge(edge["data"]["source"], edge["data"]["target"], **edge["data"])
+                
+        return G
+
+    def get_network_clusters(self) -> List[Dict[str, Any]]:
+        import networkx as nx
+        G = self._build_networkx_graph()
+        clusters = []
+        for i, component in enumerate(nx.connected_components(G)):
+            if len(component) > 1:
+                nodes = [G.nodes[n] for n in component]
+                clusters.append({
+                    "id": f"cluster-{i}",
+                    "name": f"Potential Network Cluster {i+1}",
+                    "size": len(component),
+                    "node_ids": list(component),
+                    "nodes": nodes
+                })
+        clusters.sort(key=lambda x: x["size"], reverse=True)
+        return clusters
+
+    def get_highly_connected_entities(self, limit: int = 5) -> List[Dict[str, Any]]:
+        G = self._build_networkx_graph()
+        degrees = dict(G.degree())
+        top_nodes = sorted(degrees.items(), key=lambda x: x[1], reverse=True)[:limit]
+        
+        results = []
+        for node_id, degree in top_nodes:
+            if degree > 0:
+                node_data = G.nodes[node_id]
+                results.append({
+                    "id": node_id,
+                    "name": node_data.get("name", ""),
+                    "type": node_data.get("label", ""),
+                    "degree": degree
+                })
+        return results
+
+    def get_bridge_entities(self, limit: int = 5) -> List[Dict[str, Any]]:
+        import networkx as nx
+        G = self._build_networkx_graph()
+        if len(G.nodes) == 0:
+            return []
+        betweenness = nx.betweenness_centrality(G)
+        top_nodes = sorted(betweenness.items(), key=lambda x: x[1], reverse=True)[:limit]
+        
+        results = []
+        for node_id, score in top_nodes:
+            if score > 0:
+                node_data = G.nodes[node_id]
+                results.append({
+                    "id": node_id,
+                    "name": node_data.get("name", ""),
+                    "type": node_data.get("label", ""),
+                    "betweenness_score": round(score, 4)
+                })
+        return results
+
+    def get_cross_case_entities(self) -> List[Dict[str, Any]]:
+        with self.driver.session() as session:
+            query = """
+            MATCH (e)-[]-(p:PERSON)-[:INVOLVED_IN]->(c:CASE)
+            WHERE labels(e)[0] <> 'CASE'
+            WITH e, count(DISTINCT c) AS case_count, collect(DISTINCT c.id) AS cases
+            WHERE case_count > 1
+            RETURN e.id AS id, e.name AS name, labels(e)[0] AS type, case_count, cases
+            ORDER BY case_count DESC
+            """
+            results = []
+            for record in session.run(query):
+                results.append({
+                    "id": record["id"],
+                    "name": record["name"],
+                    "type": record["type"],
+                    "case_count": record["case_count"],
+                    "cases": record["cases"]
+                })
+            return results
+
+    def get_global_temporal_intelligence(self) -> Dict[str, Any]:
+        with self.driver.session() as session:
+            query = """
+            MATCH ()-[r]->()
+            WHERE r.timestamp IS NOT NULL AND r.timestamp <> ""
+            RETURN min(r.timestamp) AS first_event, max(r.timestamp) AS last_event, count(r) AS total_events
+            """
+            record = session.run(query).single()
+            if record:
+                return {
+                    "first_event": record["first_event"],
+                    "last_event": record["last_event"],
+                    "total_events": record["total_events"]
+                }
+            return {"first_event": None, "last_event": None, "total_events": 0}
+

@@ -54,7 +54,7 @@ const CaseList: React.FC = () => {
   }, [token]);
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', color: '#e2e8f0', fontFamily: 'Inter, sans-serif' }}>
+    <div className="workspace-page">
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
         <div>
           <h1 style={{ color: '#06b6d4', margin: 0, fontSize: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
