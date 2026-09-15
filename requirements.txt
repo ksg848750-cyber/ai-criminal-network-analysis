@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pandas
+neo4j
+pydantic
+spacy

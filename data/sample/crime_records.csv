@@ -1,0 +1,7 @@
+case_id,person_id,person_name,phone,vehicle,location_id,location_name,event_date,description,organization
+CASE-101,A-001,Ravi Kumar,P-101,V-014,L-003,Market Area,2026-08-12,Person observed near location using vehicle V-014.,ORG-01
+CASE-102,B-002,Arjun Mehta,P-202,V-014,L-005,Warehouse Area,2026-08-14,Person observed using vehicle V-014 near L-005.,ORG-02
+CASE-103,C-003,Sameer Ali,P-008,V-021,L-005,Warehouse Area,2026-08-15,Person observed near L-005 using phone P-008.,ORG-02
+CASE-104,A-004,R. Kumar,P-404,V-099,L-020,Station Area,2026-08-18,Unrelated record involving a similarly named person.,ORG-09
+CASE-105,B-005,Neha Sharma,P-505,V-031,L-030,Residential Area,2026-08-20,Routine observation with no shared demo identifiers.,ORG-11
+CASE-106,C-006,Ravi K,P-101,V-014,L-003,Market Area,2026-08-13,Alias-like record supporting entity resolution for Ravi Kumar.,ORG-01

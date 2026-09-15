@@ -1,0 +1,208 @@
+/* Central Design System: Investigator Dashboard (MVP Phase 2) */
+:root {
+  /* Background: very dark navy / charcoal */
+  --bg-main: #0B101E;
+  
+  /* Panels: slightly lighter slate/navy */
+  --bg-panel: #131A2B;
+  --bg-panel-hover: #1A2438;
+  --border-color: #23304A;
+  
+  /* Primary intelligence accent: muted cyan/blue */
+  --accent-primary: #3B82F6;
+  --accent-primary-hover: #2563EB;
+  
+  /* Secondary accent: desaturated teal */
+  --accent-secondary: #0D9488;
+  
+  /* Normal text: cool white/light gray */
+  --text-main: #E2E8F0;
+  
+  /* Secondary text: muted gray-blue */
+  --text-muted: #94A3B8;
+  
+  /* Status/Alerts */
+  --status-amber: #D97706; /* Restrained amber */
+  --status-red: #DC2626;   /* Restrained red */
+  --status-green: #059669; /* Muted green */
+  
+  /* Shadows and visual hierarchy */
+  --shadow-panel: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Layout */
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr 350px;
+  grid-template-rows: 60px 1fr;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.dashboard-header {
+  grid-column: 1 / -1;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--text-main);
+  z-index: 10;
+}
+
+.dashboard-header .accent {
+  color: var(--accent-primary);
+  margin-left: 8px;
+}
+
+.panel-left, .panel-right {
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  padding: 20px;
+  z-index: 5;
+}
+
+.panel-right {
+  border-right: none;
+  border-left: 1px solid var(--border-color);
+}
+
+.graph-container {
+  background-color: var(--bg-main);
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Typography & Components */
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-panel-hover);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-panel);
+}
+
+/* Badges / Tags */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background-color: var(--border-color);
+  color: var(--text-main);
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.badge.amber { background-color: rgba(217, 119, 6, 0.2); color: var(--status-amber); border: 1px solid var(--status-amber); }
+.badge.red { background-color: rgba(220, 38, 38, 0.2); color: var(--status-red); border: 1px solid var(--status-red); }
+.badge.green { background-color: rgba(5, 150, 105, 0.2); color: var(--status-green); border: 1px solid var(--status-green); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background-color: var(--accent-primary);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--accent-primary-hover);
+}
+
+.btn-reject {
+  background-color: var(--status-red);
+}
+
+.btn-reject:hover {
+  background-color: #B91C1C;
+}
+
+.btn-verify {
+  background-color: var(--status-green);
+}
+
+.btn-verify:hover {
+  background-color: #047857;
+}
+
+/* Entity list styling */
+.entity-list {
+  list-style: none;
+}
+
+.entity-item {
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.entity-item:last-child {
+  border-bottom: none;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
